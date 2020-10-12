@@ -11,6 +11,13 @@ const { List, Task } = require('./db/models');
 // Load middleware
 app.use(bodyParser.json());
 
+// CORS HEADER MIDDLEWARE
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
 /* ROUTE HANDLERS*/
 
 /* LIST HANDLERS*/
@@ -72,16 +79,6 @@ app.get('/lists/:listId/tasks', (req, res) => {
         res.send(tasks);
     })
 });
-
-app.get('/lists/:listId/tasks/:taskId', (req, res) => {
-    Task.findOne({
-        _id: req.params.taskId,
-        _listId: req.params.listId
-    }).then( (task) => {
-        res.send(task);
-    })
-});
-
 
 app.post('/lists/:listId/tasks/:taskId', (req, res) => {
     // We want to create a new task in a specified list, identified by list's ID
